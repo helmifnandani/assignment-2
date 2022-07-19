@@ -1,25 +1,39 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { useApp } from "./App.hook";
+import "./App.css";
+import FooterContainer from "./components/molecules/footerContainer";
+import HeaderContainer from "./components/molecules/headerContainer";
+import TableContainer from "./components/molecules/tableContainer";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+const App = () => {
+	const { currencyRate, isRefresh, setCurrencyRate, setIsRefresh } = useApp();
+
+	return (
+		<div className="App">
+			<TableContainer>
+				<HeaderContainer></HeaderContainer>
+				{Object.keys(currencyRate).map((el, index) => {
+					let curr_rate = Number(currencyRate[el]).toFixed(4);
+					let rate = curr_rate * 0.05;
+					let buy_rate = (Number(curr_rate) + Number(rate)).toFixed(4);
+					let sell_rate = Number(curr_rate - rate).toFixed(4);
+					return (
+						<tr key={index}>
+							<td>{el}</td>
+							<td>{buy_rate}</td>
+							<td>{curr_rate}</td>
+							<td>{sell_rate}</td>
+						</tr>
+					);
+				})}
+			</TableContainer>
+			<button onClick={() => setIsRefresh(true)}>Refresh</button>
+			<FooterContainer>
+				Rates are based from 1 USD. This Application uses API from
+				https://currencyfreaks.com
+			</FooterContainer>
+		</div>
+	);
+};
 
 export default App;
